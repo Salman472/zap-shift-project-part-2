@@ -2,7 +2,7 @@ import React from 'react';
 
 const SignIn = () => {
     return (
-        <div className='btns '>
+        <div className='btns hover:bg-primary '>
             signin
         </div>
     );

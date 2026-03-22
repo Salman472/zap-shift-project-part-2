@@ -8,8 +8,12 @@ import Success from "../pages/aboutUs/AboutUs/Success";
 import Team from "../pages/aboutUs/AboutUs/Team";
 import AboutLayout from "../layout/AboutLayout";
 import PageNotFound from "../components/error/PageNotFound";
+import AuthLayout from "../layout/AuthLayout";
+import Login from "../pages/auth/Login/Login";
+import Register from "../pages/auth/Register/Register";
 
 export const router = createBrowserRouter([
+  // root layout
   {
     path: "/",
     Component:RootLayout,
@@ -58,4 +62,19 @@ export const router = createBrowserRouter([
 
     ]
   },
+  // auth layout
+  {
+    path:'/',
+    Component:AuthLayout,
+    children:[
+      {
+        path:'/login',
+        Component:Login
+      },
+      {
+        path:'/register',
+        Component:Register
+      }
+    ]
+  }
 ]);
