@@ -6,17 +6,45 @@ import Arrow from "../../../components/buttons/Arrow";
 import SignIn from "../../../components/buttons/SignIn";
 import SignUp from "../../../components/buttons/SignUp";
 import useAuth from "../../../hooks/useAuth";
+import Swal from "sweetalert2";
+import { FaRegCircleUser } from "react-icons/fa6";
 
 const Navbar = () => {
-  const {user, logOut}=useAuth()
+  const { user, logOut } = useAuth();
+  console.log(user?.photoURL);
   // log out function
-  const hangleLogOut=()=>{
-    logOut().then(result=>{
-      console.log(result);
-    }).catch(error=>{
-      console.log(error);
-    })
-  }
+  const handleLogOut = () => {
+  Swal.fire({
+    title: "Log out?",
+    text: "Do you really want to logout?",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#bbf707",
+    cancelButtonColor: "#03373D",
+    confirmButtonText: "Yes, Logout",
+  }).then((result) => {
+
+    if (result.isConfirmed) {
+
+      // 👉 ekhane logout hobe
+      logOut()
+        .then(() => {
+          Swal.fire({
+            title: "Logged out!",
+            text: "You have been successfully logged out.",
+            icon: "success",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+    }
+
+  });
+};
   const NavLinks = (
     <>
       <li>
@@ -41,7 +69,7 @@ const Navbar = () => {
   );
   return (
     <div className="bg-base-100 shadow-sm">
-      <div className='navbar container mx-auto px-2 sm:px-4 md:px-6 lg:px-8'>
+      <div className="navbar container mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -74,15 +102,27 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1 gap-3">{NavLinks}</ul>
         </div>
         <div className="navbar-end gap-3">
-          {
-            user? <button onClick={hangleLogOut} className="btns">Log Out</button> : <>
-            <Link to={'/login'}><SignIn /></Link>
-            <Link to={'/register'}><SignUp /></Link>
+          {user ? (
+            <button onClick={handleLogOut} className="btns">
+              Log Out
+            </button>
+          ) : (
+            <>
+              <Link to={"/login"}>
+                <SignIn />
+              </Link>
+              <Link to={"/register"}>
+                <SignUp />
+              </Link>
             </>
-          }
-          
-          
+          )}
+
           <Arrow />
+        <div>
+            {
+            user?.photoURL ? <img className="h-10 w-10 rounded-full" src={user?.photoURL} alt="" /> : <FaRegCircleUser className="h-10 w-10"/>
+          }
+        </div>
         </div>
       </div>
     </div>
