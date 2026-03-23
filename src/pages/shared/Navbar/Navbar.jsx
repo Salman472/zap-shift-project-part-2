@@ -1,12 +1,22 @@
 import React from "react";
 import Logo from "../../../components/Logo/Logo";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 
 import Arrow from "../../../components/buttons/Arrow";
 import SignIn from "../../../components/buttons/SignIn";
 import SignUp from "../../../components/buttons/SignUp";
+import useAuth from "../../../hooks/useAuth";
 
 const Navbar = () => {
+  const {user, logOut}=useAuth()
+  // log out function
+  const hangleLogOut=()=>{
+    logOut().then(result=>{
+      console.log(result);
+    }).catch(error=>{
+      console.log(error);
+    })
+  }
   const NavLinks = (
     <>
       <li>
@@ -64,8 +74,14 @@ const Navbar = () => {
           <ul className="menu menu-horizontal px-1 gap-3">{NavLinks}</ul>
         </div>
         <div className="navbar-end gap-3">
-          <SignIn />
-          <SignUp />
+          {
+            user? <button onClick={hangleLogOut} className="btns">Log Out</button> : <>
+            <Link to={'/login'}><SignIn /></Link>
+            <Link to={'/register'}><SignUp /></Link>
+            </>
+          }
+          
+          
           <Arrow />
         </div>
       </div>
