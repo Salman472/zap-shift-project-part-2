@@ -3,8 +3,6 @@ import Logo from "../../../components/Logo/Logo";
 import { Link, NavLink } from "react-router";
 
 import Arrow from "../../../components/buttons/Arrow";
-import SignIn from "../../../components/buttons/SignIn";
-import SignUp from "../../../components/buttons/SignUp";
 import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -103,25 +101,30 @@ const Navbar = () => {
         </div>
         <div className="navbar-end gap-3">
           {user ? (
+            <>
+            
             <button onClick={handleLogOut} className="btns">
               Log Out
             </button>
+             {
+            user?.photoURL ? <img className="h-10 w-10 rounded-full" src={user?.photoURL} alt="" /> : <FaRegCircleUser className="h-10 w-10"/>
+          }
+            </>
+
           ) : (
             <>
-              <Link to={"/login"}>
-                <SignIn />
+              <Link to={"/login"} className="btns hover:bg-primary">
+                SignIn
               </Link>
-              <Link to={"/register"}>
-                <SignUp />
+              <Link to={"/rider"} className="btnsBg ">
+                Be A Rider
               </Link>
             </>
           )}
 
           <Arrow />
         <div>
-            {
-            user?.photoURL ? <img className="h-10 w-10 rounded-full" src={user?.photoURL} alt="" /> : <FaRegCircleUser className="h-10 w-10"/>
-          }
+           
         </div>
         </div>
       </div>

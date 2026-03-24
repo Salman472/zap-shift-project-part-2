@@ -11,6 +11,8 @@ import PageNotFound from "../components/error/PageNotFound";
 import AuthLayout from "../layout/AuthLayout";
 import Login from "../pages/auth/Login/Login";
 import Register from "../pages/auth/Register/Register";
+import PrivateRoute from "./PrivateRoute";
+import Rider from "../pages/rider/Rider";
 
 export const router = createBrowserRouter([
   // root layout
@@ -23,7 +25,7 @@ export const router = createBrowserRouter([
             Component:Home
         },
         {
-          path:'/coverage',
+          path:'coverage',
           Component:Coverage,
           loader: ()=>fetch("/utilits/serviceCenters.json").then(res=>res.json())
         },
@@ -54,6 +56,10 @@ export const router = createBrowserRouter([
               Component:Team
             },
           ]
+        },
+        {
+          path:'rider',
+          element:<PrivateRoute><Rider/></PrivateRoute>
         },
         {
           path:'/*',
