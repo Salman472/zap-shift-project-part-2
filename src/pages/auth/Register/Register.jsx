@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../../../hooks/useAuth";
 import { Link } from "react-router";
 import SocialLogin from "../socialLogin/SocialLogin";
+import axios from "axios";
 
 const Register = () => {
   const {
@@ -10,12 +11,37 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { createUser } = useAuth();
+  const { createUser,profileUpdate } = useAuth();
   const handleRegister = (data) => {
-    console.log("after register", data);
+    console.log("after register", data.photo[0]);
+    const profileImage = data.photo[0];
+
     createUser(data.email, data.password)
       .then((result) => {
-        console.log(result);
+        console.log(result.user);
+        // store the image and get the url
+        const formData = new FormData();
+        formData.append("image", profileImage);
+        const image_api_url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_ImageBB_host_key}`;
+        axios
+          .post(image_api_url, formData)
+          .then((res) => {
+            console.log("image", res.data.data.url);
+            // update user profile profile
+        const userProfile={
+          displayName:data.name,
+          photoURL:res.data.data.url
+        }
+        profileUpdate(userProfile).then(()=>{
+          console.log('user profile update successful');
+        }).catch(error=>{
+          console.log(error);
+        })
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        
       })
       .catch((error) => {
         console.log(error);
@@ -30,9 +56,9 @@ const Register = () => {
       {/*form  */}
       <form onSubmit={handleSubmit(handleRegister)}>
         <fieldset className="fieldset">
-          {/* <label className="label text-lg">Name</label> */}
+          <label className="label text-lg">Name</label>
           {/* name field */}
-          {/* <input
+          <input
             {...register("name", { required: true })}
             type="text"
             className="input w-full text-lg"
@@ -40,7 +66,20 @@ const Register = () => {
           />
           {errors.name?.type === "required" && (
             <p className="text-red-500 text-lg">name is required.</p>
-          )} */}
+          )}
+
+          <label className="label text-lg">Photo</label>
+          {/* image field */}
+          <input
+            {...register("photo", { required: true })}
+            type="file"
+            className="file-input w-full text-lg"
+            placeholder="Your Photo "
+          />
+          {errors.photo?.type === "required" && (
+            <p className="text-red-500 text-lg">photo is required.</p>
+          )}
+
           <label className="label text-lg">Email</label>
           {/* email field */}
           <input
@@ -85,13 +124,16 @@ const Register = () => {
           <button className="btnsBg text-lg">Register</button>
           <p className="text-lg">
             Don’t have any account?{" "}
-            <Link to={"/login"} className="text-blue-500 hover:to-blue-600 underline">
+            <Link
+              to={"/login"}
+              className="text-blue-500 hover:to-blue-600 underline"
+            >
               Login
             </Link>
           </p>
         </fieldset>
       </form>
-      <SocialLogin/>
+      <SocialLogin />
     </div>
   );
 };
