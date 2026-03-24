@@ -9,7 +9,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
-  console.log(user?.photoURL);
+  console.log(user);
   // log out function
   const handleLogOut = () => {
   Swal.fire({
@@ -107,7 +107,7 @@ const Navbar = () => {
               Log Out
             </button>
              {
-            user?.photoURL ? <img className="h-10 w-10 rounded-full" src={user?.photoURL} alt="" /> : <FaRegCircleUser className="h-10 w-10"/>
+            user ? <img className="h-10 w-10 rounded-full" src={user?.photoURL} alt="user profile" /> : <FaRegCircleUser className="h-10 w-10"/>
           }
             </>
 
